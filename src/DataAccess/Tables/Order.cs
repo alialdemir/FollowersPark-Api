@@ -1,4 +1,6 @@
 ﻿using FollowersPark.DataAccess.Tables.Entity;
+using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace FollowersPark.DataAccess.Tables
 {
@@ -11,5 +13,10 @@ namespace FollowersPark.DataAccess.Tables
 
         public int PricingId { get; set; }
         public virtual Pricing Pricing { get; set; }
+
+        [DataType(DataType.DateTime)]
+        public DateTime FinishDate { get; set; }
+
+        public byte AccountsLimit { get; set; }
     }
 }

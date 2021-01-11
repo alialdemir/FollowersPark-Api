@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using FollowersPark.Models.Error;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 
 namespace FollowersPark.Controllers
@@ -7,6 +9,7 @@ namespace FollowersPark.Controllers
     [Authorize]
     [ApiController]
     [Route("api/v1/[controller]")]
+    [Produces("application/json")]
     public class ControllerBase : Microsoft.AspNetCore.Mvc.ControllerBase
     {
         private string userId = string.Empty;
@@ -23,6 +26,20 @@ namespace FollowersPark.Controllers
 
                 return userId;
             }
+        }
+
+        public BadRequestObjectResult BadRequest(object error)
+        {
+            if (error is string)
+            {
+                return base.BadRequest(new ErrorModel(error.ToString()));
+            }
+            else if (error is IEnumerable<string>)
+            {
+                return base.BadRequest(new ErrorModel((IEnumerable<string>)error));
+            }
+
+            return base.BadRequest(error);
         }
     }
 }

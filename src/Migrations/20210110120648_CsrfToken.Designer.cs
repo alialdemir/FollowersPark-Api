@@ -4,14 +4,16 @@ using FollowersPark.DataAccess.EntityFramework.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace FollowersPark.Migrations
 {
     [DbContext(typeof(FollowersParkContext))]
-    partial class FollowersParkContextModelSnapshot : ModelSnapshot
+    [Migration("20210110120648_CsrfToken")]
+    partial class CsrfToken
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

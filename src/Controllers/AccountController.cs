@@ -1,6 +1,9 @@
 ﻿using AutoMapper;
+using FollowersPark.DataAccess.EntityFramework.Repositories.InstagramAccount;
+using FollowersPark.DataAccess.EntityFramework.Repositories.Order;
 using FollowersPark.DataAccess.Tables;
 using FollowersPark.Models;
+using FollowersPark.Models.InstagramAccount;
 using FollowersPark.Models.User;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -22,16 +25,22 @@ namespace FollowersPark.Controllers
     {
         private readonly UserManager<User> _userManager;
         private readonly IMapper _mapper;
+        private readonly IOrderRepository _orderRepository;
+        private readonly IInstagramAccountRepository _instagramAccountRepository;
         private readonly SignInManager<User> _signInManager;
         private readonly AppSettings _appSettings;
 
         public AccountController(UserManager<User> userManager,
                                  IMapper mapper,
+                                 IOrderRepository orderRepository,
+                                 IInstagramAccountRepository instagramAccountRepository,
                                  SignInManager<User> signInManager,
                                  IOptions<AppSettings> options)
         {
             _userManager = userManager;
             _mapper = mapper;
+            _orderRepository = orderRepository;
+            _instagramAccountRepository = instagramAccountRepository;
             _signInManager = signInManager;
             _appSettings = options.Value;
         }
@@ -61,6 +70,14 @@ namespace FollowersPark.Controllers
 
                 return BadRequest(errors);
             }
+
+            _orderRepository.Insert(new Order
+            {
+                UserId = user.Id,
+                PricingId = 5,// free
+                FinishDate = DateTime.UtcNow.AddDays(_appSettings.FreeDays),
+                AccountsLimit = 1,
+            });
 
             return Ok();
         }
@@ -125,6 +142,38 @@ namespace FollowersPark.Controllers
                 ExpiresIn = expires,
                 Email = user.Email,
             };
+        }
+
+        /// <summary>
+        /// Instagram hesabı ekle/güncelle
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        [HttpPost("instagram")]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        public IActionResult Post([FromBody] InstagramAccountModel model)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest();
+
+            var account = _instagramAccountRepository.Find(x => x.InstagramId == model.InstagramId).FirstOrDefault();
+            if (account == null)
+            {
+                var instagramAccount = _mapper.Map<InstagramAccount>(model);
+
+                instagramAccount.UserId = UserId;
+
+                _instagramAccountRepository.Insert(instagramAccount);
+            }
+            else
+            {
+                var updateInstagramAccount = _mapper.Map(model, account);
+
+                _instagramAccountRepository.Update(updateInstagramAccount);
+            }
+
+            return Ok();
         }
     }
 }

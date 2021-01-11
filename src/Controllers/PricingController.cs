@@ -1,10 +1,13 @@
-﻿using FollowersPark.DataAccess.EntityFramework.Repositories.Pricing;
+﻿using FollowersPark.DataAccess.EntityFramework.Repositories.Order;
+using FollowersPark.DataAccess.EntityFramework.Repositories.Pricing;
+using FollowersPark.DataAccess.Tables;
 using FollowersPark.Models.PagedList;
 using FollowersPark.Models.Pricing;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Security.Cryptography;
 using System.Text;
@@ -14,10 +17,13 @@ namespace FollowersPark.Controllers
     public class PricingController : ControllerBase
     {
         private readonly IPricingRepository _pricingRepository;
+        private readonly IOrderRepository _orderRepository;
 
-        public PricingController(IPricingRepository pricingRepository)
+        public PricingController(IPricingRepository pricingRepository,
+                                 IOrderRepository orderRepository)
         {
             _pricingRepository = pricingRepository;
+            _orderRepository = orderRepository;
         }
 
         /// <summary>
@@ -41,12 +47,25 @@ namespace FollowersPark.Controllers
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         public IActionResult Post([FromBody] OrderModel order)
         {
-            string password = "Secret Passphrase";
-            string fullName = Decrypt(order.Fullname);
-            string cardNumber = Decrypt(order.CardNumber);
-            string year = Decrypt(order.Year);
-            string month = Decrypt(order.Month);
-            string securityCode = Decrypt(order.SecurityCode);
+            int pricingId = 1;
+            var pricing = _pricingRepository.Find(x => x.PricingId == pricingId).FirstOrDefault();
+            if (pricing == null)
+                return BadRequest();
+
+            //string password = "Secret Passphrase";
+            //string fullName = Decrypt(order.Fullname);
+            //string cardNumber = Decrypt(order.CardNumber);
+            //string year = Decrypt(order.Year);
+            //string month = Decrypt(order.Month);
+            //string securityCode = Decrypt(order.SecurityCode);
+
+            _orderRepository.Insert(new Order
+            {
+                UserId = UserId,
+                PricingId = pricing.PricingId,
+                FinishDate = DateTime.UtcNow.AddMonths(1),// One month
+                AccountsLimit = Convert.ToByte(pricing.SubTitle),
+            });
 
             return Ok();
         }

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using FollowersPark.Models.BlockList;
 using FollowersPark.Models.DirectMessage;
+using FollowersPark.Models.InstagramAccount;
 using FollowersPark.Models.Log;
 using FollowersPark.Models.Pricing;
 using FollowersPark.Models.Task;
@@ -56,6 +57,9 @@ namespace FollowersPark.DataAccess.Mapper
 
             CreateMap<PricingModel, Tables.Pricing>();
             CreateMap<Tables.Pricing, PricingModel>();
+
+            CreateMap<InstagramAccountModel, Tables.InstagramAccount>();
+            CreateMap<Tables.InstagramAccount, InstagramAccountModel>();
         }
     }
 }

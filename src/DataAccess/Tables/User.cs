@@ -13,6 +13,7 @@ namespace FollowersPark.DataAccess.Tables
         public bool Deleted { get; set; }
         public virtual ICollection<BlockList> BlockLists { get; set; } = new HashSet<BlockList>();
         public virtual ICollection<DirectMessage> DirectMessages { get; set; } = new HashSet<DirectMessage>();
+        public virtual ICollection<InstagramAccount> InstagramAccounts { get; set; } = new HashSet<InstagramAccount>();
         public virtual ICollection<Task> Tasks { get; set; } = new HashSet<Task>();
         public virtual ICollection<Log> Logs { get; set; } = new HashSet<Log>();
         public virtual ICollection<UserList> UserLists { get; set; } = new HashSet<UserList>();

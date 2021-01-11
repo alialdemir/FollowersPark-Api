@@ -3,7 +3,7 @@
     "region" : "eu-central-1",
     "configuration" : "Release",
     "framework"     : "netcoreapp3.1",
-    "self-contained" : false,
+    "self-contained" : true,
     "application"    : "FollowersPark",
     "environment"    : "Followerspark-env",
     "enable-xray"    : false,

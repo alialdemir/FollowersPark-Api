@@ -4,14 +4,16 @@ using FollowersPark.DataAccess.EntityFramework.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace FollowersPark.Migrations
 {
     [DbContext(typeof(FollowersParkContext))]
-    partial class FollowersParkContextModelSnapshot : ModelSnapshot
+    [Migration("20210108131132_OrderAccountsLimit")]
+    partial class OrderAccountsLimit
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -87,61 +89,6 @@ namespace FollowersPark.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("DirectMessages");
-                });
-
-            modelBuilder.Entity("FollowersPark.DataAccess.Tables.InstagramAccount", b =>
-                {
-                    b.Property<int>("InstagramAccountId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CsrfToken")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(255)")
-                        .HasMaxLength(255);
-
-                    b.Property<bool>("Deleted")
-                        .HasColumnType("bit");
-
-                    b.Property<long>("FollowersCount")
-                        .HasColumnType("bigint");
-
-                    b.Property<long>("FollowingCount")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("Fullname")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(255)")
-                        .HasMaxLength(255);
-
-                    b.Property<string>("InstagramId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(255)")
-                        .HasMaxLength(255);
-
-                    b.Property<bool>("IsVerified")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("ModifiedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("Username")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(255)")
-                        .HasMaxLength(255);
-
-                    b.HasKey("InstagramAccountId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("InstagramAccounts");
                 });
 
             modelBuilder.Entity("FollowersPark.DataAccess.Tables.Log", b =>
@@ -226,18 +173,6 @@ namespace FollowersPark.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Orders");
-
-                    b.HasData(
-                        new
-                        {
-                            OrderId = 1,
-                            AccountsLimit = (byte)255,
-                            CreatedDate = new DateTime(2021, 1, 10, 15, 6, 47, 812, DateTimeKind.Local).AddTicks(6379),
-                            Deleted = false,
-                            FinishDate = new DateTime(2023, 10, 6, 12, 6, 47, 812, DateTimeKind.Utc).AddTicks(7293),
-                            PricingId = 5,
-                            UserId = "a53bc759-f5b2-49fe-b4d3-db96edab5118"
-                        });
                 });
 
             modelBuilder.Entity("FollowersPark.DataAccess.Tables.Pricing", b =>
@@ -285,7 +220,7 @@ namespace FollowersPark.Migrations
                         new
                         {
                             PricingId = 1,
-                            CreatedDate = new DateTime(2021, 1, 10, 15, 6, 47, 808, DateTimeKind.Local).AddTicks(3099),
+                            CreatedDate = new DateTime(2021, 1, 8, 16, 11, 31, 348, DateTimeKind.Local).AddTicks(2454),
                             Currency = "₺",
                             Deleted = false,
                             IsActive = true,
@@ -297,7 +232,7 @@ namespace FollowersPark.Migrations
                         new
                         {
                             PricingId = 2,
-                            CreatedDate = new DateTime(2021, 1, 10, 15, 6, 47, 811, DateTimeKind.Local).AddTicks(818),
+                            CreatedDate = new DateTime(2021, 1, 8, 16, 11, 31, 351, DateTimeKind.Local).AddTicks(3966),
                             Currency = "₺",
                             Deleted = false,
                             IsActive = true,
@@ -309,7 +244,7 @@ namespace FollowersPark.Migrations
                         new
                         {
                             PricingId = 3,
-                            CreatedDate = new DateTime(2021, 1, 10, 15, 6, 47, 811, DateTimeKind.Local).AddTicks(1750),
+                            CreatedDate = new DateTime(2021, 1, 8, 16, 11, 31, 351, DateTimeKind.Local).AddTicks(5031),
                             Currency = "₺",
                             Deleted = false,
                             IsActive = true,
@@ -321,7 +256,7 @@ namespace FollowersPark.Migrations
                         new
                         {
                             PricingId = 4,
-                            CreatedDate = new DateTime(2021, 1, 10, 15, 6, 47, 811, DateTimeKind.Local).AddTicks(1785),
+                            CreatedDate = new DateTime(2021, 1, 8, 16, 11, 31, 351, DateTimeKind.Local).AddTicks(5080),
                             Currency = "₺",
                             Deleted = false,
                             IsActive = true,
@@ -333,13 +268,13 @@ namespace FollowersPark.Migrations
                         new
                         {
                             PricingId = 5,
-                            CreatedDate = new DateTime(2021, 1, 10, 15, 6, 47, 811, DateTimeKind.Local).AddTicks(1810),
+                            CreatedDate = new DateTime(2021, 1, 8, 16, 11, 31, 351, DateTimeKind.Local).AddTicks(5112),
                             Currency = "₺",
                             Deleted = false,
                             IsActive = false,
                             IsBestSeller = false,
                             Price = 0m,
-                            SubTitle = "1",
+                            SubTitle = "Free",
                             Title = "Free"
                         });
                 });
@@ -502,27 +437,6 @@ namespace FollowersPark.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "a53bc759-f5b2-49fe-b4d3-db96edab5118",
-                            AccessFailedCount = 0,
-                            ConcurrencyStamp = "b7e6b263-b296-4ab5-97ea-de6146f11dbb",
-                            CreatedDate = new DateTime(2021, 1, 10, 15, 6, 47, 812, DateTimeKind.Local).AddTicks(3000),
-                            Deleted = false,
-                            Email = "demo@followerspark.com",
-                            EmailConfirmed = false,
-                            LockoutEnabled = true,
-                            ModifiedDate = new DateTime(2021, 1, 10, 15, 6, 47, 812, DateTimeKind.Local).AddTicks(4422),
-                            NormalizedEmail = "DEMO@FOLLOWERSPARK.COM",
-                            NormalizedUserName = "DEMO@FOLLOWERSPARK.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEEgF9tR64l8xuT16f/zfv51NKZ5BOY+8spB5eJN5KuQ4s5kv74JVsDmPMYsGFcqFEA==",
-                            PhoneNumberConfirmed = false,
-                            SecurityStamp = "WFAXFZOX3UIXREEDBJXNWNMUU2LZB3E4",
-                            TwoFactorEnabled = false,
-                            UserName = "demo@followerspark.com"
-                        });
                 });
 
             modelBuilder.Entity("FollowersPark.DataAccess.Tables.UserList", b =>
@@ -707,13 +621,6 @@ namespace FollowersPark.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("FollowersPark.DataAccess.Tables.InstagramAccount", b =>
-                {
-                    b.HasOne("FollowersPark.DataAccess.Tables.User", "User")
-                        .WithMany("InstagramAccounts")
-                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("FollowersPark.DataAccess.Tables.Log", b =>

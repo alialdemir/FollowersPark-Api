@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using FollowersPark.DataAccess.EntityFramework.Repositories.Order;
 using FollowersPark.DataAccess.EntityFramework.Repositories.Task;
 using FollowersPark.Models.PagedList;
 using FollowersPark.Models.Task;
@@ -11,12 +12,15 @@ namespace FollowersPark.Controllers
     public class TaskController : ControllerBase
     {
         private readonly ITaskRepository _taskRepository;
+        private readonly IOrderRepository _orderRepository;
         private readonly IMapper _mapper;
 
         public TaskController(ITaskRepository taskRepository,
+                              IOrderRepository orderRepository,
                               IMapper mapper)
         {
             _taskRepository = taskRepository;
+            _orderRepository = orderRepository;
             _mapper = mapper;
         }
 
@@ -31,6 +35,20 @@ namespace FollowersPark.Controllers
         public IActionResult Get([FromQuery] Pageable pageable)
         {
             var result = _taskRepository.GetTaskUserId(UserId, pageable);
+
+            if (!_orderRepository.IsActive(UserId) && result.Items.Any(x => x.Status))
+            {
+                result
+                    .Items
+                    .Where(x => x.Status)
+                    .ToList()
+                    .ForEach(item =>
+                    {
+                        item.Status = false;
+
+                        TaskStartStop(item.TaskId, item.Status);
+                    });
+            }
 
             return Ok(result);
         }
@@ -47,6 +65,9 @@ namespace FollowersPark.Controllers
         {
             if (!ModelState.IsValid)
                 return BadRequest();
+
+            if (!_orderRepository.IsActive(UserId))
+                return BadRequest("You do not have active accounts.");
 
             var task = _mapper.Map<DataAccess.Tables.Task>(model);
 
@@ -66,6 +87,9 @@ namespace FollowersPark.Controllers
         {
             if (!ModelState.IsValid)
                 return BadRequest();
+
+            if (!_orderRepository.IsActive(UserId))
+                return BadRequest("You do not have active accounts.");
 
             if (!_taskRepository.Find(x => x.UserId == UserId && x.TaskId == taskId).Any())
                 return Forbid();
@@ -90,6 +114,9 @@ namespace FollowersPark.Controllers
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         public IActionResult TaskStart([FromRoute] int taskId)
         {
+            if (!_orderRepository.IsActive(UserId))
+                return BadRequest("You do not have active accounts.");
+
             return TaskStartStop(taskId, true);
         }
 

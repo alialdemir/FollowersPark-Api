@@ -5,5 +5,6 @@
         public string JwtExpireDays { get; set; }
         public string JwtIssuer { get; set; }
         public string JwtKey { get; set; }
+        public byte FreeDays { get; set; }
     }
 }
